@@ -1,5 +1,5 @@
 # Getting Started with Create React App
-
+How the App works you can see here: https://react.galateastudio.nl/flights_list/ <br/>
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
