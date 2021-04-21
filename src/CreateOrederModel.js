@@ -29,7 +29,7 @@ function CreateOrderModel(props) {
     return (
         <div>
             <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle} charCode='X'>Create a new client</ModalHeader>
+                <ModalHeader toggle={toggle} charCode='X'>Search for flight</ModalHeader>
                 <ModalBody>
 
                     <table>
