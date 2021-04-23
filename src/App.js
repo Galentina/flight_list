@@ -1,10 +1,11 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
 import {connect} from "react-redux";
 import CreateOrderModel from "./CreateOrederModel";
 import FlightLoading from "./FlightLoading";
 import Pagination from "./pagination";
+import {getCities, getFlights, getAirlines} from './redux/actions'
 
 
 
@@ -15,14 +16,17 @@ function App(props) {
     const toggle = () => setModal(!modal);
     const [currentPage, setCurrentPage]=useState(1);
     const [flightPerPage, setFlightPerPage]=useState(15);
+
+    useEffect(() =>{props.getFlightsList(); props.getCitiesList(); props.getAirlineList()}, [])
+
     const update=()=>{
-        props.renew();
+        props.getFlightsList();
     }
     const indexOfLastFlight = currentPage * flightPerPage;
     const indexOfFirstFlight = indexOfLastFlight - flightPerPage;
 
     const currentFlights = flights.slice(indexOfFirstFlight, indexOfLastFlight)
-
+console.log(currentFlights)
     const paginate = (num) => setCurrentPage(num);
 
     return (
@@ -31,7 +35,10 @@ function App(props) {
 
             <hr/>
 
-            <button type="button"  className="btn btn-primary mr-xl-5" onClick={() => setModal(!modal)} data-bs-toggle="modal"
+            <button type="button"  className="btn btn-primary mr-xl-5" onClick={() => {
+                setModal(!modal);
+                setCurrentPage(1)
+            }} data-bs-toggle="modal"
                     data-bs-target="#exampleModal">
                 Search for flights
             </button>{' '}
@@ -40,7 +47,7 @@ function App(props) {
             }} >
                 Show all flights
             </button>
-            <CreateOrderModel modal={modal} toggle={toggle} />
+            <CreateOrderModel modal={modal} toggle={toggle} paginate={paginate}/>
             <hr/>
             <table className="table" style={{width: '70%', margin: "auto"}}>
                 <thead>
@@ -53,7 +60,7 @@ function App(props) {
                 </tr>
 
                 </thead>
-                <FlightLoading flights={currentFlights}/>
+                <FlightLoading flights={currentFlights} />
             </table>
             <Pagination flightPerPage={flightPerPage} totalFlight={flights.length} paginate={paginate}/>
             <p style={{fontSize: '12px', marginTop: '50px'}}>Developer: Galina Malareva, 2021-04-20</p>
@@ -67,8 +74,9 @@ const mapStateToProps = (state) => ({
     airlines: state.airlines,
 })
 const mapDispatchToProps = (dispatch) => ({
-    renew: () => dispatch({type: "RENEW", payload: {}}),
-    // getStatuses: () => dispatch (getStatuses()),
+    getFlightsList: () => dispatch(getFlights()),
+    getCitiesList: () => dispatch(getCities()),
+    getAirlineList: () => dispatch(getAirlines())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

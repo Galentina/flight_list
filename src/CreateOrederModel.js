@@ -1,11 +1,14 @@
 import React, { useState} from 'react';
 import {Button, Modal, ModalBody, ModalFooter, ModalHeader} from "reactstrap";
 import {connect} from "react-redux";
+import {getFlights, updateFlightList} from "./redux/actions";
 
 function CreateOrderModel(props) {
-    const {flights, cities, airlines} = props;
-    const useAirlines=["--",...airlines];
+    const {cities, airlines} = props;
+    const useAirlines=['--',...airlines];
+    console.log(useAirlines)
     const useCities=['--', ...cities];
+    console.log(useCities)
     const { toggle, modal} = props;
 
 
@@ -19,7 +22,8 @@ function CreateOrderModel(props) {
     const SearchFlight = () => {
         let newData1= newData.replace(/[-]/g,'')
         let newTime1= newTime.replace(/[:]/g,'')
-        props.searchForFlight(newData1, newTime1, newName, newDirection);
+        let data={data: newData1, time: newTime1, name: newName, direction: newDirection}
+        props.searchForFlight(data);
         setData('');
         setTime('');
         setNewName('');
@@ -70,7 +74,10 @@ function CreateOrderModel(props) {
                     </table>
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary mr-xl-5" style={{alignSelf: "left"}} onClick={() => props.renew()}>choose from all flights</Button>
+                    <Button color="primary mr-xl-5" style={{alignSelf: "left"}} onClick={() => {
+                        props.paginate(1);
+                        props.getFlightsList()
+                    }}>Choose from all flights</Button>
                     <Button color="primary" onClick={() => {
                         SearchFlight(newData, newTime, newName, newDirection);
                         // toggle()
@@ -90,11 +97,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    searchForFlight: (newData, newTime, name, direction) => dispatch({type: "SEARCH",
-        payload: {data: newData, time: newTime, name: name, direction: direction}
-    }),
-    renew: () => dispatch({type: "RENEW", payload: {}})
-});
+    searchForFlight: (payload) => dispatch(updateFlightList(payload)),
+    getFlightsList: () => dispatch(getFlights()),
+})
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateOrderModel);

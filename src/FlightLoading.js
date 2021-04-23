@@ -9,7 +9,7 @@ function FlightsLoading(props) {
 
     return (
         <tbody>
-        {flights.map((el,i)=> <Table key={i} flight={el} id={el.id} />)}
+            {flights.map((el,i)=> <Table key={i} flight={el} id={el.id} />)}
         </tbody>
     )
 }
@@ -18,6 +18,7 @@ const mapStateToProps = () => ({
 })
 const mapDispatchToProps = (dispatch) => ({
     renew: () => dispatch({type: "RENEW", payload: {}}),
+
 
 })
 
